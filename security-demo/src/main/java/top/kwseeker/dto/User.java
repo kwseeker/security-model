@@ -1,15 +1,27 @@
 package top.kwseeker.dto;
 
+import com.fasterxml.jackson.annotation.JsonView;
+import org.hibernate.validator.constraints.NotBlank;
+import top.kwseeker.webmod.validator.MyConstraint;
+
+import javax.validation.constraints.Past;
 import java.util.Date;
 
 public class User {
 
+    public interface UserSimpleView {}
+    public interface UserDetailView extends UserSimpleView {}   //展示UserDetailView会自动展示UserSimpleView
+
     private String id;
 
+    @MyConstraint(message = "用户名不能超过16bytes")
     private String username;
 
+    //For more Hibernate Validator to see: https://docs.jboss.org/hibernate/stable/validator/reference/en-US/html_single/
+    @NotBlank(message = "密码不能为空")
     private String password;
 
+    @Past(message = "生日必须是过去的时间")
     private Date birthday;
 
     public User() {}
@@ -19,6 +31,7 @@ public class User {
         this.password = password;
     }
 
+    @JsonView(UserSimpleView.class)
     public String getId() {
         return id;
     }
@@ -27,6 +40,7 @@ public class User {
         this.id = id;
     }
 
+    @JsonView(UserSimpleView.class)
     public String getUsername() {
         return username;
     }
@@ -35,6 +49,7 @@ public class User {
         this.username = username;
     }
 
+    @JsonView(UserDetailView.class)
     public String getPassword() {
         return password;
     }
@@ -43,6 +58,7 @@ public class User {
         this.password = password;
     }
 
+//    @JsonView(UserSimpleView.class)
     public Date getBirthday() {
         return birthday;
     }

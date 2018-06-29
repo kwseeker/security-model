@@ -1,15 +1,19 @@
 package top.kwseeker.controller;
 
 
+import com.fasterxml.jackson.annotation.JsonView;
 import org.apache.commons.lang.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang.builder.ToStringStyle;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 import top.kwseeker.dto.User;
 import top.kwseeker.dto.UserQueryCondition;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -27,7 +31,7 @@ public class UserController {
 
     //创建用户
     @PostMapping
-    public User create(@RequestBody User user) {
+    public User create(@Valid @RequestBody User user) {
         //TODO: Id号自增
         System.out.println(user.getId() + "\n"
                 + user.getUsername() + "\n"
@@ -40,6 +44,7 @@ public class UserController {
 
     //查询用户列表
     @GetMapping
+    @JsonView(User.UserSimpleView.class)    //只显示UserSimpleView注释的接口获取的数据
     //public List<User> query(@RequestParam String username, @PageableDefault(page = 2, size = 5, sort = "username, desc") Pageable pageable) {
     //public List<User> query(@RequestParam(name = "username", required = false, defaultValue = "kwseeker") String un,
     //                        @PageableDefault(page = 2, size = 5, sort = "username, desc") Pageable pageable) {
@@ -65,6 +70,7 @@ public class UserController {
 
     //获取指定用户的信息（通过用户id）
     @GetMapping(value = "/{id:\\d+}")   //正则表达式约束id值为多位整数
+    @JsonView(User.UserSimpleView.class)
     public User getInfo(@PathVariable String id) {
 
 //        if( true ) {     //TODO: 查数据库判断id是否存在
@@ -82,7 +88,15 @@ public class UserController {
 
     //更新用户信息数据
     @PutMapping("/{id:\\d+}")
-    public User updateInfo(@RequestBody User user) {
+    public User updateInfo(@Valid @RequestBody User user, BindingResult errors) {   //BindingResult获取Validator错误消息
+        if(errors.hasErrors()) {
+            errors.getAllErrors().stream().forEach(error -> {
+                FieldError fieldError = (FieldError) error;
+                String message = fieldError.getField() + " " + fieldError.getDefaultMessage();
+                System.out.println(message);
+            });
+        }
+
         System.out.println(ReflectionToStringBuilder.toString(user, ToStringStyle.MULTI_LINE_STYLE));
         //更新用户数据的操作
         //...
