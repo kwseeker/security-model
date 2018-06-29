@@ -11,6 +11,7 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 import top.kwseeker.dto.User;
 import top.kwseeker.dto.UserQueryCondition;
+import top.kwseeker.webmod.exception.UserNotExistException;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -73,17 +74,17 @@ public class UserController {
     @JsonView(User.UserSimpleView.class)
     public User getInfo(@PathVariable String id) {
 
-//        if( true ) {     //TODO: 查数据库判断id是否存在
-//            throw new UserNotExistException(id);
-//        }
-//        return null;
+        if( true ) {     //TODO: 查数据库判断id是否存在
+            throw new UserNotExistException(id);
+        }
+        return null;
 
-        User user = new User();
-        user.setId("1");
-        user.setUsername("Arvin");
-        user.setPassword("123458");
-        user.setBirthday(new Date());
-        return user;
+//        User user = new User();
+//        user.setId("1");
+//        user.setUsername("Arvin");
+//        user.setPassword("123458");
+//        user.setBirthday(new Date());
+//        return user;
     }
 
     //更新用户信息数据
