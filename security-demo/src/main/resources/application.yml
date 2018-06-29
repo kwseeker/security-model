@@ -1,0 +1,17 @@
+server:
+  port: 8060
+spring:
+    # DataSource
+    datasource:
+      # driver-class-name: com.mysql.cj.jdbc.Driver
+      url: jdbc:mysql://localhost/security_db?characterEncoding=utf-8&useSSL=false&serverTimezone=UTC
+      username: root
+      password: 112358
+      driver-class-name: com.mysql.jdbc.Driver
+    # Session storage config
+    session:
+      store-type: none
+security:
+  basic:
+    enabled: false  # 关闭基于 HTTP Basic的认证，Spring Security 默认会通过HTTP Basic做认证授权，生成一个user用户和一个随机密码
+
