@@ -14,8 +14,9 @@
     <dependencies>
         <dependency>
             <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-oauth2</artifactId>
+            <artifactId>spring-cloud-starter-oauth2</artifactId>    <!-- 引入 Spring Security 和 Spring Security OAuth 相关所有的依赖 -->
         </dependency>
+        <!-- 用户认证数据的存储，一种是存储在redis, 一种是存储在mysql -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-redis</artifactId>
@@ -28,6 +29,7 @@
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
         </dependency>
+        <!-- spring social 相关的依赖 -->
         <dependency>
             <groupId>org.springframework.social</groupId>
             <artifactId>spring-social-config</artifactId>
@@ -44,6 +46,7 @@
             <groupId>org.springframework.social</groupId>
             <artifactId>spring-social-web</artifactId>
         </dependency>
+        <!-- 工具类 -->
         <dependency>
             <groupId>commons-lang</groupId>
             <artifactId>commons-lang</artifactId>

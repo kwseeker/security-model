@@ -20,17 +20,18 @@
     </properties>
 
     <dependencyManagement>
+        <!-- 引入下面两个依赖后，子项目依赖的版本号<version>可以省略，系统会自动配置版本号 -->
         <dependencies>
             <dependency>
                 <groupId>io.spring.platform</groupId>
-                <artifactId>platform-bom</artifactId>
+                <artifactId>platform-bom</artifactId>   <!-- 自动管理Maven依赖的版本,使子模块版本兼容 -->
                 <version>Brussels-SR4</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
             <dependency>
                 <groupId>org.springframework.cloud</groupId>
-                <artifactId>spring-cloud-dependencies</artifactId>
+                <artifactId>spring-cloud-dependencies</artifactId>  <!-- 用到spring cloud包管理工具 -->
                 <version>Dalston.SR2</version>
                 <type>pom</type>
                 <scope>import</scope>
