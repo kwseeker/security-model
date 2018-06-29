@@ -20,6 +20,12 @@
     
 #### Spring Boot 基础补充
 
++ **@JsonView隐藏敏感数据**  
+    没有被@JsonView修饰的字段默认为隐藏。
+
++ **使用Hibernate Validator校验数据以及自定义约束**  
+    校验数据是否符合约束条件，如果不符合约束条件并不会报错，只会打印提示信息。
+
 + **请求异步处理的三种方法**  
     https://docs.spring.io/spring-framework/docs/current/spring-framework-reference/web.html#mvc-ann-async
     
