@@ -1,6 +1,7 @@
 package top.kwseeker.dto;
 
 import com.fasterxml.jackson.annotation.JsonView;
+import io.swagger.annotations.ApiModelProperty;
 import org.hibernate.validator.constraints.NotBlank;
 import top.kwseeker.webmod.validator.MyConstraint;
 
@@ -15,6 +16,7 @@ public class User {
     private String id;
 
     @MyConstraint(message = "用户名不能超过16bytes")
+    @ApiModelProperty(value = "用户名")
     private String username;
 
     //For more Hibernate Validator to see: https://docs.jboss.org/hibernate/stable/validator/reference/en-US/html_single/
