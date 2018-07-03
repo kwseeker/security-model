@@ -14,4 +14,7 @@ spring:
 security:
   basic:
     enabled: false  # 关闭基于 HTTP Basic的认证，Spring Security 默认会通过HTTP Basic做认证授权，生成一个user用户和一个随机密码
-
+kwseeker:
+  security:
+    browser:
+      loginPage: /login-demo.html
