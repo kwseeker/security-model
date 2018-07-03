@@ -18,3 +18,5 @@ kwseeker:
   security:
     browser:
       loginPage: /login-demo.html
+#      loginType: REDIRECT
+      loginType: JSON

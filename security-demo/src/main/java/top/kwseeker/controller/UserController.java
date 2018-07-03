@@ -7,6 +7,10 @@ import org.apache.commons.lang.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang.builder.ToStringStyle;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
@@ -22,6 +26,18 @@ import java.util.List;
 @RestController //如果方法返回是一个对象或对象的容器，会自动转换成JSON的格式
 @RequestMapping("/user")
 public class UserController {
+
+    //获取当前登录用户信息
+    @GetMapping("/me")
+//    public Object getCurrentUser() {
+//        return SecurityContextHolder.getContext().getAuthentication();
+//    }
+//    public Object getCurrentUser(Authentication authentication) {
+//        return authentication;
+//    }
+    public Object getCurrentUser(@AuthenticationPrincipal UserDetails user) {
+    	return user;
+    }
 
     //注册用户
     @PostMapping("/register")

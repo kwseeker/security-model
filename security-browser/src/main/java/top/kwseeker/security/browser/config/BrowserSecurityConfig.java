@@ -8,6 +8,8 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import top.kwseeker.security.browser.authentication.MyAuthenticationFailureHandler;
+import top.kwseeker.security.browser.authentication.MyAuthenticationSuccessHandler;
 
 @EnableWebSecurity
 public class BrowserSecurityConfig extends WebSecurityConfigurerAdapter {
@@ -15,11 +17,18 @@ public class BrowserSecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private SecurityProperties securityProperties;
 
+    @Autowired
+    private MyAuthenticationSuccessHandler myAuthenticationSuccessHandler;
+    @Autowired
+    private MyAuthenticationFailureHandler myAuthenticationFailureHandler;
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.formLogin()    //支持很多种认证方式，如：formLogin/csrf/rememberMe/anonymous/cors/httpBasic/openidLogin
                 .loginPage("/authentication/login")          //重新指定登录页面，从而取代Spring Security默认的那个简陋的页面
                 .loginProcessingUrl("/authentication/form") //指定 UsernamePasswordAuthenticationFilter 认证的请求
+                .successHandler(myAuthenticationSuccessHandler) //默认的处理器SimpleUrlAuthenticationFailureHandler是重定向跳转，而更常用的应该是返回JSON字段
+                .failureHandler(myAuthenticationFailureHandler)
                 .and()
             .authorizeRequests()
                 .antMatchers("/authentication/login").permitAll()
