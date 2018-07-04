@@ -1,7 +1,6 @@
 package top.kwseeker.security.browser.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.security.SecurityProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -10,6 +9,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import top.kwseeker.security.browser.authentication.MyAuthenticationFailureHandler;
 import top.kwseeker.security.browser.authentication.MyAuthenticationSuccessHandler;
+import top.kwseeker.security.core.properties.SecurityProperties;
+import top.kwseeker.security.core.validate.code.ValidateCodeFilter;
 
 @EnableWebSecurity
 public class BrowserSecurityConfig extends WebSecurityConfigurerAdapter {
@@ -24,6 +25,11 @@ public class BrowserSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
+        ValidateCodeFilter validateCodeFilter = new ValidateCodeFilter();
+        validateCodeFilter.setAuthenticationFailureHandler(myAuthenticationFailureHandler);
+        validateCodeFilter.setSecurityProperties(securityProperties);
+        validateCodeFilter.afterPropertiesSet();    //TODO: 不是自动执行的么？
+
         http.formLogin()    //支持很多种认证方式，如：formLogin/csrf/rememberMe/anonymous/cors/httpBasic/openidLogin
                 .loginPage("/authentication/login")          //重新指定登录页面，从而取代Spring Security默认的那个简陋的页面
                 .loginProcessingUrl("/authentication/form") //指定 UsernamePasswordAuthenticationFilter 认证的请求
@@ -31,8 +37,9 @@ public class BrowserSecurityConfig extends WebSecurityConfigurerAdapter {
                 .failureHandler(myAuthenticationFailureHandler)
                 .and()
             .authorizeRequests()
-                .antMatchers("/authentication/login").permitAll()
-                .antMatchers("/login-*.html").permitAll()
+                .antMatchers("/authentication/login",
+                        securityProperties.getBrowser().getLoginPage(),
+                        "/code/image").permitAll()
                 .anyRequest()
                 .authenticated()
                 .and()

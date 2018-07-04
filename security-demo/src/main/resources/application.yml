@@ -20,3 +20,7 @@ kwseeker:
       loginPage: /login-demo.html
 #      loginType: REDIRECT
       loginType: JSON
+    imageCode:
+      length: 6
+      width: 80
+#      url: /user/*
