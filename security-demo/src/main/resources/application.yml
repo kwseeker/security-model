@@ -20,6 +20,7 @@ kwseeker:
       loginPage: /login-demo.html
 #      loginType: REDIRECT
       loginType: JSON
+      rememberMeSeconds: 60   # 测试token临时定为60秒过期, 服务器的登录超时（好像20分钟左右无动作会退出登录或服务器重启重置为未登录状态）与Token超时（在一段时间内不用手动登录）不同
     imageCode:
       length: 6
       width: 80
