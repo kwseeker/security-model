@@ -14,7 +14,9 @@ import org.springframework.security.web.authentication.rememberme.JdbcTokenRepos
 import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
 import top.kwseeker.security.browser.authentication.MyAuthenticationFailureHandler;
 import top.kwseeker.security.browser.authentication.MyAuthenticationSuccessHandler;
+import top.kwseeker.security.core.authentication.sms.SmsCodeAuthenticationConfig;
 import top.kwseeker.security.core.properties.SecurityProperties;
+import top.kwseeker.security.core.validate.code.SmsCodeFilter;
 import top.kwseeker.security.core.validate.code.ValidateCodeFilter;
 
 import javax.sql.DataSource;
@@ -37,17 +39,18 @@ public class BrowserSecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private UserDetailsService userDetailsService;
 
+    @Autowired
+    private SmsCodeAuthenticationConfig smsCodeAuthenticationConfig;
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        ValidateCodeFilter validateCodeFilter = new ValidateCodeFilter();
-        validateCodeFilter.setAuthenticationFailureHandler(myAuthenticationFailureHandler);
-        validateCodeFilter.setSecurityProperties(securityProperties);
-        validateCodeFilter.afterPropertiesSet();    //TODO: 不是自动执行的么？
 
         logger.info("RememberMe Token超时时间： " + securityProperties.getBrowser().getRememberMeSeconds());
 
-        http.formLogin()    //支持很多种认证方式，如：formLogin/csrf/rememberMe/anonymous/cors/httpBasic/openidLogin
-                .loginPage("/authentication/login")          //重新指定登录页面，从而取代Spring Security默认的那个简陋的页面
+        http.apply(smsCodeAuthenticationConfig)
+                .and()
+            .formLogin()    //支持很多种认证方式，如：formLogin/csrf/rememberMe/anonymous/cors/httpBasic/openidLogin
+                .loginPage("/authentication/login")          //重新指定登录页面，从而取代Spring Security默认的那个简陋的页面(可以是controller请求路径也可以是.html文件路径)
                 .loginProcessingUrl("/authentication/form") //指定 UsernamePasswordAuthenticationFilter 认证的请求
                 .successHandler(myAuthenticationSuccessHandler) //默认的处理器SimpleUrlAuthenticationFailureHandler是重定向跳转，而更常用的应该是返回JSON字段
                 .failureHandler(myAuthenticationFailureHandler)
@@ -60,11 +63,30 @@ public class BrowserSecurityConfig extends WebSecurityConfigurerAdapter {
             .authorizeRequests()
                 .antMatchers("/authentication/login",
                         securityProperties.getBrowser().getLoginPage(),
-                        "/code/image").permitAll()
+                        "/code/image",
+                        "/code/sms").permitAll()
                 .anyRequest()
                 .authenticated()
                 .and()
+//            .logout()
+//                .logoutUrl("/authentication/logout")
+//                .logoutSuccessUrl("/logout-std.html")
+//                .logoutSuccessHandler()
+//                .invalidateHttpSession(true)
+//                .addLogoutHandler()
+//                .deleteCookies()
+//                .and()
             .csrf().disable();
+
+        ValidateCodeFilter validateCodeFilter = new ValidateCodeFilter();
+        validateCodeFilter.setAuthenticationFailureHandler(myAuthenticationFailureHandler);
+        validateCodeFilter.setSecurityProperties(securityProperties);
+        validateCodeFilter.afterPropertiesSet();    //TODO: 不是自动执行的么？
+
+        SmsCodeFilter smsCodeFilter = new SmsCodeFilter();
+        smsCodeFilter.setAuthenticationFailureHandler(myAuthenticationFailureHandler);
+        smsCodeFilter.setSecurityProperties(securityProperties);
+        smsCodeFilter.afterPropertiesSet();
     }
 
     // 使用 BCrypt 加密算法

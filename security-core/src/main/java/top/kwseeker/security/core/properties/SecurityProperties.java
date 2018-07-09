@@ -14,6 +14,7 @@ public class SecurityProperties {
     //图形验证码 width height length expireIn 配置项
     private ValidateCodeProperties validateCode = new ValidateCodeProperties();
 
+
     public BrowserProperties getBrowser() {
         return browser;
     }

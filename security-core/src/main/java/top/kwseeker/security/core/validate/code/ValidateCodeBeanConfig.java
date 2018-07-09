@@ -5,6 +5,8 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import top.kwseeker.security.core.properties.SecurityProperties;
+import top.kwseeker.security.core.validate.code.sms.DefaultSmsCodeSenderImpl;
+import top.kwseeker.security.core.validate.code.sms.SmsCodeSender;
 
 /**
  * 实现图形验证码逻辑可配置
@@ -21,4 +23,10 @@ public class ValidateCodeBeanConfig {
         codeGenerator.setSecurityProperties(securityProperties);
         return codeGenerator;
     }
+
+    @Bean
+	@ConditionalOnMissingBean(SmsCodeSender.class)
+	public SmsCodeSender smsCodeSender() {
+		return new DefaultSmsCodeSenderImpl();
+	}
 }
