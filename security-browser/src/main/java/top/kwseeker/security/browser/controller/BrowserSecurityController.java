@@ -10,6 +10,7 @@ import org.springframework.security.web.RedirectStrategy;
 import org.springframework.security.web.savedrequest.HttpSessionRequestCache;
 import org.springframework.security.web.savedrequest.RequestCache;
 import org.springframework.security.web.savedrequest.SavedRequest;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
@@ -51,5 +52,12 @@ public class BrowserSecurityController {
 
         return new SimpleResponse("访问的服务需要身份认证，引导用户到登录页...");
     }
+
+//    @GetMapping("/session/invalid")
+//    @ResponseStatus(code = HttpStatus.UNAUTHORIZED)
+//    public SimpleResponse sessionInvalid() {
+//        String message = "Session失效";
+//        return new SimpleResponse(message);
+//    }
 
 }

@@ -12,8 +12,11 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl;
 import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
+import org.springframework.security.web.session.InvalidSessionStrategy;
 import top.kwseeker.security.browser.authentication.MyAuthenticationFailureHandler;
 import top.kwseeker.security.browser.authentication.MyAuthenticationSuccessHandler;
+import top.kwseeker.security.browser.session.MyInvalidSessionStrategy;
+import top.kwseeker.security.browser.session.MySessionInformationExpiredStrategy;
 import top.kwseeker.security.core.authentication.sms.SmsCodeAuthenticationConfig;
 import top.kwseeker.security.core.properties.SecurityProperties;
 import top.kwseeker.security.core.validate.code.SmsCodeFilter;
@@ -42,6 +45,9 @@ public class BrowserSecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private SmsCodeAuthenticationConfig smsCodeAuthenticationConfig;
 
+    @Autowired
+	private InvalidSessionStrategy invalidSessionStrategy;
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
 
@@ -60,11 +66,21 @@ public class BrowserSecurityConfig extends WebSecurityConfigurerAdapter {
                 .tokenValiditySeconds(securityProperties.getBrowser().getRememberMeSeconds())   //过期时间
                 .userDetailsService(userDetailsService)     //指定用于查找UserDetails信息的UserDetailsService实例
                 .and()
+            .sessionManagement()
+//                .invalidSessionUrl("session/invalid")       // session 失效后，访问服务器触发的URL
+                .invalidSessionStrategy(invalidSessionStrategy) //session失效后的处理策略 When an invalid session ID is submitted, the strategy will be invoked, redirecting to the configured URL.
+                .maximumSessions(1)                         //单个用户允许同时拥有的最大session数量，session之间没有影响
+                .maxSessionsPreventsLogin(true)             //超出session数量的处理（true, 无法登陆不会创建新的session; false, 后来者可以登陆，前面 session 会被过期）
+                .expiredSessionStrategy(new MySessionInformationExpiredStrategy())                   //过期 session 处理策略
+                .and()
+                .and()      //TODO:
             .authorizeRequests()
                 .antMatchers("/authentication/login",
                         securityProperties.getBrowser().getLoginPage(),
                         "/code/image",
-                        "/code/sms").permitAll()
+                        "/code/sms",
+                        "/session/invalid",
+                        "/session-invalid.html").permitAll()
                 .anyRequest()
                 .authenticated()
                 .and()
