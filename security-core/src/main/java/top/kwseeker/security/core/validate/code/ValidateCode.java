@@ -1,9 +1,11 @@
 package top.kwseeker.security.core.validate.code;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
-public class ValidateCode {
+public class ValidateCode implements Serializable {
 
+    private static final long serialVersionUID = 9077456258279494527L;
     private String code;
     private LocalDateTime expireTime;
 

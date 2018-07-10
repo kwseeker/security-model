@@ -57,7 +57,9 @@ public class ValidateCodeController {
     @GetMapping("/code/image")
     public void createCode(HttpServletRequest request, HttpServletResponse response) throws IOException {
         ImageCode imageCode = (ImageCode)imageCodeGenerator.generate(new ServletWebRequest(request));                             //创建验证码图片
-        sessionStrategy.setAttribute(new ServletWebRequest(request), SESSION_KEY_FOR_CODE_IMAGE, imageCode);       //将图片对象存入 session 以便后面校验使用
+
+        ValidateCode validateCodeForFormLogin = new ValidateCode(imageCode.getCode(), imageCode.getExpireTime());
+        sessionStrategy.setAttribute(new ServletWebRequest(request), SESSION_KEY_FOR_CODE_IMAGE, validateCodeForFormLogin);       //将图片对象存入 session 以便后面校验使用
         //TODO: request和session的关系,还没好好研究过他俩的实现与工作原理
         ImageIO.write(imageCode.getImage(), "JPEG", response.getOutputStream());        //流的方式返回图片数据给前端，前端 <img src=""/>接收
     }

@@ -1,7 +1,7 @@
 server:
   port: 8060
   session:
-    timeout: 60     # session 过期时间(单位秒)，默认至少一分钟，设置低于一分钟会被spring重置为1分钟
+    timeout: 300     # session 过期时间(单位秒)，默认至少一分钟，设置低于一分钟会被spring重置为1分钟
 spring:
     # DataSource
     datasource:
@@ -12,7 +12,8 @@ spring:
       driver-class-name: com.mysql.jdbc.Driver
     # Session storage config
     session:
-      store-type: none
+      store-type: REDIS   # 使用 REDIS 统一管理 session
+
 security:
   basic:
     enabled: false  # 关闭基于 HTTP Basic的认证，Spring Security 默认会通过HTTP Basic做认证授权，生成一个user用户和一个随机密码
