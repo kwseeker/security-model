@@ -36,7 +36,7 @@ OAuth2 是做第三方（这里第三方指第三方企业或者服务集群中�
 以QQ用户登录新浪微博为例：
 
 #### 1.2.1 授权码模式（authorization code）
-   
+
 ![](https://ss1.baidu.com/6ONXsjip0QIZ8tyhnq/it/u=3360499339,3703041730&fm=173&app=49&f=JPEG?w=640&h=443&s=E6F1E27E110A454B4E5454CE0000D0B3)
 
 这里client应该是新浪微博服务器，user-agent 是浏览器。
@@ -53,11 +53,11 @@ G）新浪微博使用QQ用户信息刷新页面，显示用户头像，曾现�
 ++授权码为何不能作为访问token？为何还要去获取访问token？++   
 因为这种模式中AccessToken不会经过浏览器或移动端的App，而是新浪微博的后台服务器直接从QQ认证服务端去交换，
 这样就最大限度的减小了AccessToken泄漏的风险。
-  
+
 除了授权码模式，其他都有使用范围限制。  
 安全级别: 授权码最高、客户端模式最低、简化模式和密码模式居中；  
 简化模式危险在浏览器或APP，密码模式风险在第三方服务器。  
-  
+
 #### 1.2.2 简化模式（implicit）
 
 ![](https://ss0.baidu.com/6ONWsjip0QIZ8tyhnq/it/u=1094957589,2534791990&fm=173&app=49&f=JPEG?w=640&h=547&s=BD0A777E190EC44D1C75F5CE0000C0B3)

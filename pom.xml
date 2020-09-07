@@ -13,6 +13,7 @@
         <module>security-app</module>
         <module>security-browser</module>
         <module>security-demo</module>
+        <module>oauth2-java</module>
     </modules>
 
     <properties>
